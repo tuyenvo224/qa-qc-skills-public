@@ -36,6 +36,7 @@ I will provide one or more of the following:
 3. For IMAGE/Figma input: describe only the VISIBLE elements. Any behavior, logic, or element that is not clearly shown must
 be treated as a point to clarify, never guessed.
 4. The goal is to find GAPS, not to praise the spec for being complete. If an area is well described, say so briefly and focus on what is missing.
+5. If the input has no concrete rule, limit or flow step (e.g. only a feature name), do NOT create the file, whatever its length. In the chat, say the input is too thin, ask for the spec/story/screenshot, and list at most 3 fundamental scope questions as a plain numbered list (no IDs).
 
 # ANALYSIS PROCESS (do this yourself before producing the output)
 Review the spec through the following lenses so nothing is missed:
@@ -99,7 +100,7 @@ time is limited. Keep their IDs (e.g. `QH-01`) so they can be traced back to
 the tables.
 
 # OUTPUT
-Create a new file in the `questions/` folder (unless the user specifies another location). Markdown format. File name pattern:
+Create a new file in the `questions/` folder (unless the user specifies another location; no file when the input is too thin, see principle 5). Markdown format. File name pattern:
 - yyyy-mm-dd_hh-mm-ss-feature-name.md
 
 File naming: the folder is relative to the current working directory (create it if missing); `yyyy-mm-dd_hh-mm-ss` is the local date and 24-hour time when the file is written; `feature-name` is a short slug of the feature or requirement name: lowercase ASCII letters and digits joined by `-`, Vietnamese diacritics removed (`đ` → `d`), no prefixes such as "Feature:" or version numbers, at most 50 characters (e.g. `apply-voucher-at-checkout`).

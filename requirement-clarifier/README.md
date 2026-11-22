@@ -50,6 +50,7 @@ A Markdown file in `questions/` named `yyyy-mm-dd_hh-mm-ss-feature-name.md`, wit
 - **Question IDs:** `QH-01…` (High), `QM-01…` (Medium), `QL-01…` (Low), numbered continuously across the document — easy to refer to in the meeting ("about QH-02…") and when recording answers.
 - **Gap types:** Ambiguity / Missing / Conflict / Assumption / Testability.
 - Anything inferred is marked "(assumption)" and turned into a question — never presented as fact.
+- If the input has no concrete rule or flow (e.g. only a feature name), no file is created: the skill asks for the spec and lists up to 3 scope questions.
 
 ## Language
 

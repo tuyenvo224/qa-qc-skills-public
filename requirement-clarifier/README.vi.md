@@ -50,6 +50,7 @@ Một file Markdown trong `questions/`, tên `yyyy-mm-dd_hh-mm-ss-ten-feature.md
 - **Mã câu hỏi:** `QH-01…` (High), `QM-01…` (Medium), `QL-01…` (Low), đánh số liên tục trên toàn tài liệu. Dễ nhắc tới trong buổi họp ("câu QH-02…") và ghi lại câu trả lời.
 - **Loại vấn đề:** Ambiguity / Missing / Conflict / Assumption / Testability.
 - Điều gì phải suy luận đều được đánh dấu "(giả định)" và chuyển thành câu hỏi, không trình bày như sự thật.
+- Nếu input không có quy tắc hay flow cụ thể nào (vd chỉ có tên chức năng) thì skill chưa tạo file, mà hỏi xin spec và nêu tối đa 3 câu hỏi về phạm vi.
 
 ## Ngôn ngữ
 
