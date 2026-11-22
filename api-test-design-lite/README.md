@@ -41,7 +41,7 @@ Generate API test cases from ./openapi.yaml
 Sinh test case API từ file swagger này: https://example.com/openapi.json
 ```
 
-Output: one file `test-case-api/yyyy-mm-dd_hh-mm-ss-<api-name>.md` (in your current working directory, unless you name another location). Specs with more than 10 endpoints get a coverage plan first; reply "ok" or adjust it.
+Output: one file `test-case-api/yyyy-mm-dd_hh-mm-ss-<api-name>.md` (in your current working directory, unless you name another location). Specs with more than 10 endpoints get a coverage plan first; reply "ok" or adjust it. Without a spec (only a description), no file is created: the skill asks for the spec instead of guessing.
 
 ## Language
 

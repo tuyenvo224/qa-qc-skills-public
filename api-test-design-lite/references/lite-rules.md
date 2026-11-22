@@ -24,7 +24,7 @@ Read this file when planning and generating test cases. Each rule below becomes 
 | Enum violation (value outside the list) | every enum input |
 | Just outside a declared limit (`minLength - 1`, `maxLength + 1`, `minimum - 1`, `maximum + 1`) | every input with a declared limit |
 | Empty object `{}` | every endpoint with a JSON body, once |
-| Wrong type in a path id (`id=abc` for an integer id) | every path id — expect `400/404` + `[NEEDS REVIEW: status not declared in spec]` (frameworks differ) |
+| Wrong type in a path id (`id=abc` for an integer id) | every path id — expect `400/404` (frameworks differ); add `[NEEDS REVIEW: status <code> not declared in spec]` for each of the two codes the endpoint does not declare |
 
 ### Auth (`Auth`, 401/403)
 Per endpoint that requires auth:

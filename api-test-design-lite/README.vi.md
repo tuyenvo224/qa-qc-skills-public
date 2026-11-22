@@ -41,7 +41,7 @@ Sinh test case API từ file ./openapi.yaml
 Generate API test cases from https://example.com/openapi.json
 ```
 
-Kết quả: một file `test-case-api/yyyy-mm-dd_hh-mm-ss-<tên-api>.md` (trong thư mục làm việc hiện tại, trừ khi bạn chỉ định nơi khác). Spec có hơn 10 endpoint thì skill đưa plan coverage trước; bạn trả lời "ok" hoặc chỉnh lại.
+Kết quả: một file `test-case-api/yyyy-mm-dd_hh-mm-ss-<tên-api>.md` (trong thư mục làm việc hiện tại, trừ khi bạn chỉ định nơi khác). Spec có hơn 10 endpoint thì skill đưa plan coverage trước; bạn trả lời "ok" hoặc chỉnh lại. Không có spec (chỉ có mô tả) thì skill chưa tạo file, mà hỏi xin spec thay vì tự đoán.
 
 ## Ngôn ngữ
 

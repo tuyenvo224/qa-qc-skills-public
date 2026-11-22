@@ -40,6 +40,8 @@ Reply to the user, and write the free-text parts of the output file, in the lang
 
 ### Step 1: Parse the spec and list the inputs
 
+No spec (only a description)? Stop and follow "No spec at all" below.
+
 Read the spec (file or URL; OpenAPI 3.x or Swagger 2.0, JSON or YAML). Extract the API metadata (title, version, servers), every endpoint (path + method), the security scheme(s) and roles, and tags (used as Module).
 
 For every endpoint list each input (path, query, header, body — including nested fields): location, type/format, required or optional, declared constraints (`minLength`/`maxLength`, `minimum`/`maximum`, `pattern`, `enum`), and `writeOnly` fields. Resolve `$ref` and merge `allOf`; for `oneOf`/`anyOf` use the first variant and note the others under "Not covered".
@@ -99,6 +101,7 @@ When a row needs a status code the spec does not declare for that endpoint, use 
 
 ## What to do when the spec is incomplete
 
+- **No spec at all** (only a description of the API) — Do not create a file. Ask for the OpenAPI/Swagger spec as a file, URL or pasted text, and say which details it must contain (endpoints, request fields and constraints, responses, security scheme).
 - **No error response schema** — Generate the rows anyway and keep the `Error message indicates …` clause where it applies; when nothing can be asserted (typical for 401/403), write `Status code only (no error schema in spec)`. Do NOT tag every row: add ONE bullet under Assumptions instead, e.g. "The spec defines no error response schema — error rows check the status code and, where possible, the error message."
 - **No examples** — Synthesize realistic data (`references/lite-rules.md` "Test data").
 - **No auth scheme defined** — Ask the user once, then assume Bearer token if no answer.
