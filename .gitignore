@@ -25,3 +25,6 @@ desktop.ini
 
 # Local notes (never published)
 qa-skills-handoff.md
+
+# Playwright MCP logs and snapshots
+.playwright-mcp/
