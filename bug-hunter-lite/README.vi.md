@@ -36,7 +36,7 @@ Flow này có thể vỡ ở đâu?
 Đóng vai người dùng xấu và phá tính năng voucher này
 ```
 
-Nếu có thông tin kỹ thuật (API, queue, cache, webhook, dịch vụ bên thứ ba) thì gửi kèm, phân tích sẽ sát hơn.
+Nếu có thông tin kỹ thuật (API, queue, cache, webhook, dịch vụ bên thứ ba) thì gửi kèm, phân tích sẽ sát hơn. Nếu bạn chỉ đưa tên chức năng, skill sẽ hỏi tối đa 2 câu ngắn trước; nếu chỉ thiếu một vài chi tiết, skill ghi rõ giả định rồi phân tích tiếp.
 
 ## 6 góc nhìn
 
@@ -53,7 +53,7 @@ Nếu có thông tin kỹ thuật (API, queue, cache, webhook, dịch vụ bên 
 
 Lưu trong `bug-hunter-analysis/`, tên `yyyy-mm-dd_hh-mm-ss-ten-feature.md`:
 
-1. **Tóm tắt luồng chính:** 3–5 câu, để xác nhận đã hiểu đúng flow.
+1. **Tóm tắt luồng chính:** 3–5 câu, để xác nhận đã hiểu đúng flow, kèm một dòng giả định nếu có.
 2. **Top 5 giả thuyết bug:** bảng gồm góc nhìn đã tìm ra bug, giả thuyết, nguyên nhân, mức ảnh hưởng (Critical / High / Medium kèm hậu quả), vì sao hay bị bỏ sót. Xếp theo mức ảnh hưởng trước, khả năng xảy ra sau.
 3. **Vùng nên tập trung:** nên dồn công test vào đâu trước.
 

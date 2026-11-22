@@ -36,7 +36,7 @@ Act as a bad user and break this voucher feature
 Flow này có thể vỡ ở đâu?
 ```
 
-Add technical context if you have it (APIs, queues, caches, webhooks, third-party services) — the analysis gets sharper.
+Add technical context if you have it (APIs, queues, caches, webhooks, third-party services) — the analysis gets sharper. If you only give a feature name, the skill asks up to 2 short questions first; if only some details are missing, it states its assumptions and continues.
 
 ## The 6 lenses
 
@@ -53,7 +53,7 @@ Add technical context if you have it (APIs, queues, caches, webhooks, third-part
 
 Saved in `bug-hunter-analysis/` as `yyyy-mm-dd_hh-mm-ss-feature-name.md`:
 
-1. **Core flow summary** — 3–5 sentences, to confirm the flow is understood correctly.
+1. **Core flow summary** — 3–5 sentences, to confirm the flow is understood correctly, plus a line of assumptions if any were made.
 2. **Top 5 bug hypotheses** — table: the lens that found it, hypothesis, why it happens, impact (Critical / High / Medium + the consequence), why it is often missed. Ranked by impact first, then likelihood.
 3. **Focus areas** — where to spend test effort first.
 

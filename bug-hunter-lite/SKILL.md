@@ -23,7 +23,9 @@ Act as a senior QA specializing in **destructive testing**. Find the bugs manual
 - **Flow / feature description** (required): business flow, user story, spec excerpt or sequence of steps.
 - **Technical context** (optional): APIs involved, queues/caches/webhooks, third-party services, multi-step transactions.
 
-If the description is too thin to understand the flow, ask at most 2 short questions; otherwise state your assumptions and continue.
+Decide how to handle gaps:
+- **Too thin** — you cannot tell the main steps of the flow (e.g. only a feature name such as "refund" or "login"): ask at most 2 short questions (a short example inside a question is fine), offer to continue with typical assumptions if the user prefers, then stop. Do not write a file until the flow is clear.
+- **Details missing** — the main steps are clear but some details are not: state your assumptions and continue.
 
 ## The 6 lenses
 
@@ -44,13 +46,17 @@ Check the flow through every lens before choosing the top 5. A lens may find not
 - **High** — significant financial discrepancy, data inconsistency needing manual fixes, rule bypass with real benefit, user blocked from a critical transaction.
 - **Medium** — minor financial impact, recoverable data issues, rule bypass in rare edge cases.
 
+The level describes the damage **if the bug happens**. Likelihood never lowers the level (a security breach that needs precise timing is still **Critical**); it is only used for ranking.
+
 Rank by **impact first, then likelihood**: a rare but catastrophic bug beats a common but minor one.
 
 ## Output format
 
+Start the file with one H1 line: `# Bug Hunter: <feature name>` (feature name in the output language), then the 3 sections below.
+
 ### 1. Core flow summary
 3–5 sentences restating the core logic, to confirm the flow is understood correctly.
-If you had to assume anything about the flow or the system, add one line after it: `Assumptions: …` (short, comma-separated).
+If you had to assume anything about the flow or the system, add one line after it: `Assumptions: …` (short, comma-separated; translate the label to the output language, e.g. `Giả định: …` in Vietnamese).
 
 ### 2. Top 5 bug hypotheses
 
@@ -78,8 +84,9 @@ A good hypothesis is **specific** ("applying voucher A then removing item B keep
 
 ## Next steps for the user (in the chat reply, not in the file)
 
-- Turn the hypotheses into test cases → `write-quick-test-cases`.
-- A hypothesis confirmed as a real bug → write it up with `bug-report`.
+The other skills named here may not be installed, so phrase them as optional:
+- Turn the hypotheses into test cases (the `write-quick-test-cases` skill does this, if installed).
+- A hypothesis confirmed as a real bug → write it up (the `bug-report` skill does this, if installed).
 
 ## Output location
 
@@ -87,4 +94,4 @@ If the user does not specify where to save, save the analysis in the `bug-hunter
 
 File naming: the folder is relative to the current working directory (create it if missing); `yyyy-mm-dd_hh-mm-ss` is the local date and 24-hour time when the file is written; `feature-name` is a short slug of the feature or requirement name: lowercase ASCII letters and digits joined by `-`, Vietnamese diacritics removed (`đ` → `d`), no prefixes such as "Feature:" or version numbers, at most 50 characters (e.g. `apply-voucher-at-checkout`).
 
-After saving, reply in the chat with the file path and a short summary (the 5 hypotheses in one line each with their impact level, plus the next steps above) — do not paste the whole file again.
+After saving, reply in the chat with, in this order: the file path, the assumptions in one line (if any), the 5 hypotheses in one line each with their impact level, the focus areas in one line, and the next steps above. Do not paste the whole file again.
