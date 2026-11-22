@@ -1,6 +1,6 @@
 ---
 name: markdown-to-excel
-description: Convert a Markdown (.md) file into an Excel workbook (.xlsx), especially files containing Markdown tables (test cases, data lists, checklists...) — each table becomes its own formatted sheet (bold colored header, freeze pane, auto-filter, auto-fit columns) using a bundled script. Use when the user asks to convert/export a .md file or Markdown tables to Excel/xlsx, e.g. "convert this markdown to Excel", "export these tables to xlsx", "chuyển file md sang excel", "xuất bảng markdown ra Excel". Do NOT use for writing new test cases (use `write-quick-test-cases`, which has its own Excel export), or for reading/editing existing Excel files.
+description: Convert a Markdown (.md) file into an Excel workbook (.xlsx), especially files containing Markdown tables (test cases, data lists, checklists...) — each table becomes its own formatted sheet (bold colored header, freeze pane, auto-filter, auto-fit columns) using a bundled script. Use when the user asks to convert/export a .md file or Markdown tables to Excel/xlsx, e.g. "convert this markdown to Excel", "export these tables to xlsx", "chuyển file md sang excel", "xuất bảng markdown ra Excel". Do NOT use for writing new test cases, or for reading/editing existing Excel files.
 metadata:
   author: tuyenvo224
   version: "1.1"

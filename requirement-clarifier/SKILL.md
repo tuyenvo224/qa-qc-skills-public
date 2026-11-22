@@ -1,6 +1,6 @@
 ---
 name: requirement-clarifier
-description: "Reviews one spec/feature (PRD, user story, Jira ticket, free text, or image/Figma/screenshot) for gaps, ambiguities and contradictions, then immediately produces a prioritized QUESTION list (High/Medium/Low, typed Ambiguity/Missing/Conflict/Assumption/Testability) plus the Top 3 questions, ready to take into a BA/PO review meeting rather than a long analysis to read alone. Triggers: \"ask questions about this feature\", \"what should I ask the BA\", \"prepare questions for the PO review\", \"review this spec for gaps\". Not for a mind map (use `requirement-to-mindmap`), hunting hidden bugs (`bug-hunter-lite`), or test cases (`write-quick-test-cases`). Also triggers on Vietnamese requests such as \"đặt câu hỏi về feature này\", \"feature này có gì cần hỏi BA không\", \"chuẩn bị câu hỏi cho buổi review với PO\"."
+description: "Reviews one spec/feature (PRD, user story, Jira ticket, free text, or image/Figma/screenshot) for gaps, ambiguities and contradictions, then immediately produces a prioritized QUESTION list (High/Medium/Low, typed Ambiguity/Missing/Conflict/Assumption/Testability) plus the Top 3 questions, ready to take into a BA/PO review meeting rather than a long analysis to read alone. Triggers: \"ask questions about this feature\", \"what should I ask the BA\", \"prepare questions for the PO review\", \"review this spec for gaps\". Not for a mind map, hunting hidden bugs, or writing test cases. Also triggers on Vietnamese requests such as \"đặt câu hỏi về feature này\", \"feature này có gì cần hỏi BA không\", \"chuẩn bị câu hỏi cho buổi review với PO\"."
 metadata:
   author: tuyenvo224
   version: "1.1"
@@ -107,6 +107,7 @@ File naming: the folder is relative to the current working directory (create it 
 After saving, reply in the chat with the file path and a short summary (number of questions per priority and the Top 3 with their IDs) — do not paste the whole file again.
 
 # RELATED SKILLS
-- Need to find hidden, high-impact bugs in the flow → use `bug-hunter-lite`.
-- Need test cases → use `write-quick-test-cases`.
-- Need a test-coverage mind map → use `requirement-to-mindmap`.
+These skills may not be installed; mention them only as optional next steps:
+- Need to find hidden, high-impact bugs in the flow → the `bug-hunter-lite` skill, if installed.
+- Need test cases → the `write-quick-test-cases` skill, if installed.
+- Need a test-coverage mind map → the `requirement-to-mindmap` skill, if installed.
