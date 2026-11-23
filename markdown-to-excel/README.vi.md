@@ -12,7 +12,7 @@ markdown-to-excel/
   ├── README.md           ← hướng dẫn tiếng Anh
   ├── README.vi.md        ← file này
   └── scripts/
-        └── md_to_xlsx.py ← script chuyển đổi (input.md [output.xlsx] --lang en|vi)
+        └── md_to_xlsx.py ← script chuyển đổi (input.md [output.xlsx] --lang en|vi [--overwrite])
 ```
 
 ## Khi nào dùng
@@ -39,11 +39,13 @@ Xuất bảng markdown này ra Excel
 Convert this markdown to Excel
 ```
 
+Bạn cũng có thể dán bảng Markdown thẳng vào chat: agent lưu nguyên văn vào một file `.md` trong thư mục làm việc (đặt tên theo nội dung) rồi chuyển file đó sang Excel.
+
 Nếu có nhiều file `.md` có thể khớp, AI agent sẽ hỏi lại thay vì tự đoán.
 
 ## Kết quả
 
-Một file `.xlsx`, mặc định nằm cạnh file nguồn, cùng tên. Bạn cũng có thể chỉ định đường dẫn lưu.
+Một file `.xlsx`, mặc định nằm cạnh file nguồn, cùng tên. Bạn cũng có thể chỉ định đường dẫn lưu. Nếu file đó đã có, không có gì bị ghi đè: agent hỏi bạn muốn thay thế hay lưu tên khác (phần bạn đã sửa trong Excel được giữ nguyên).
 
 - Mỗi bảng Markdown → một sheet, đặt tên theo heading ngay trước bảng. Bảng không có heading riêng thì lấy tên file (nếu là bảng duy nhất) hoặc `Bảng<N>` theo vị trí (vd `Bảng2`).
 - Dòng tiêu đề: chữ đậm, nền xanh, chữ trắng, cố định khi cuộn, có bộ lọc.

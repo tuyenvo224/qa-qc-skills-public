@@ -12,7 +12,7 @@ markdown-to-excel/
   ├── README.md           ← this file
   ├── README.vi.md        ← Vietnamese user guide
   └── scripts/
-        └── md_to_xlsx.py ← converter (input.md [output.xlsx] --lang en|vi)
+        └── md_to_xlsx.py ← converter (input.md [output.xlsx] --lang en|vi [--overwrite])
 ```
 
 ## When to use
@@ -39,11 +39,13 @@ Export these tables to xlsx
 Chuyển file md này sang excel
 ```
 
+You can also paste Markdown tables straight into the chat: the agent saves them unchanged to a `.md` file in your working folder (named after the content) and converts that file.
+
 If several `.md` files could match, the agent asks which one instead of guessing.
 
 ## Output
 
-One `.xlsx` file — by default next to the source file, same name. You can also give an output path.
+One `.xlsx` file — by default next to the source file, same name. You can also give an output path. If that file already exists, nothing is overwritten: the agent asks whether to replace it or save under another name (your changes made in Excel are kept).
 
 - Each Markdown table → one sheet, named after the heading right before it. A table without its own heading gets the file name (if it is the only table) or `Table<N>` by its position (e.g. `Table2`).
 - Header row: bold, blue background, white text, frozen, with auto-filter.

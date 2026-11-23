@@ -19,13 +19,16 @@ Convert 1 `.md` file (which may contain several Markdown tables) into 1 `.xlsx` 
 # HOW TO DO IT
 1. Identify the source Markdown file:
    - If the user has specified the path/file name, use exactly that file.
-   - If it is unclear and there are several candidate `.md` files (e.g. in `test-cases-for-review/`, `test-case-api/`, `mindmap/`, `questions/`), ask the user instead of guessing.
+   - If the user pastes Markdown tables in the chat instead of giving a file, save the pasted text unchanged as UTF-8 to a `.md` file in the working folder, named after the content (e.g. `test-results.md`), then convert that file as usual and give the user both paths.
+   - If it is unclear and there are several candidate `.md` files in the working folder, ask the user instead of guessing.
 2. Run the bundled script to convert — do NOT parse/retype the tables by hand:
    ```
    python "<this skill's folder>/scripts/md_to_xlsx.py" "<input.md>" "<output.xlsx>" --lang en
    ```
    - The `output` argument is optional. If the user does not specify where to save, omit it — the script saves the output in the same folder as the source file, with the same name and the `.xlsx` extension.
    - `--lang en|vi` (default `en`): use `vi` when the user wrote in Vietnamese (or asked for Vietnamese), `en` otherwise.
+   - **Never overwrite silently:** if the output `.xlsx` already exists, the script stops with "Output file already exists" and writes nothing (the existing file may hold changes made by hand in Excel). Tell the user and ask whether to replace it (re-run with `--overwrite`) or save under another name (pass a new `output` path). Do not add `--overwrite` on your own.
+   - If the skill was loaded without a folder on disk, save the script content exactly as received to a temporary file outside the working directory and run that file directly (`python "<temp file>" "<input.md>" --lang <en|vi>`, which works in any shell), then delete the temp file; the script needs no other file.
    - If the `python` command is not found (common on macOS/Linux), use `python3` instead.
 3. The script automatically handles:
    - Each Markdown table (`| ... |`) in the file → 1 separate sheet. The sheet name is taken from the heading (`##`, `###`...) right before the table; if the file has only 1 table and no heading, the file name is used as the sheet name.

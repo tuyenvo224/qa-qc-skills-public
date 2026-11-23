@@ -3,7 +3,10 @@ Convert the Markdown tables in a .md file into an Excel workbook (.xlsx):
 one sheet per table, named after the heading right before it.
 
 Usage:
-    python md_to_xlsx.py <input.md> [output.xlsx] [--lang en|vi]
+    python md_to_xlsx.py <input.md> [output.xlsx] [--lang en|vi] [--overwrite]
+
+An existing output file is never replaced unless --overwrite is given (it may hold
+changes made by hand in Excel).
 
 --lang only affects the few fixed texts the script writes itself (the header of
 the plain-text fallback sheet and the "Table<N>" sheet-name prefix); table content
@@ -173,6 +176,8 @@ def main():
     parser.add_argument('output', nargs='?', help='Path to the output .xlsx file (default: alongside input, same name)')
     parser.add_argument('--lang', choices=sorted(LABELS), default='en',
                         help='Language of the fixed texts the script writes (default: en)')
+    parser.add_argument('--overwrite', action='store_true',
+                        help='Replace the output file if it already exists (default: refuse)')
     args = parser.parse_args()
     labels = LABELS[args.lang]
 
@@ -182,6 +187,11 @@ def main():
         sys.exit(1)
 
     output_path = Path(args.output) if args.output else input_path.with_suffix('.xlsx')
+    if output_path.exists() and not args.overwrite:
+        print(f'Output file already exists: {output_path}\n'
+              'Nothing was written. Re-run with --overwrite to replace it, or give another output path.',
+              file=sys.stderr)
+        sys.exit(2)
 
     md_text = input_path.read_text(encoding='utf-8')
     tables = find_tables(md_text)

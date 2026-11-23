@@ -70,7 +70,7 @@ How to fill it in:
    ```
    python "<this skill's folder>/scripts/testcase_md_to_xlsx.py" "test-cases-for-review/yyyy-mm-dd_hh-mm-ss-feature-name.md" --lang en
    ```
-   If the skill was loaded without a folder on disk, save the script content exactly as received to a temporary file outside the working directory and run it from standard input (`python - "<md file>" --lang <en|vi> < <temp file>`), then delete the temp file; the script needs no other file. If the `python` command is not found (common on macOS/Linux), use `python3` instead. If `openpyxl` is missing, run `python -m pip install openpyxl` (or `python3 -m pip …`) and try again.
+   If the skill was loaded without a folder on disk, save the script content exactly as received to a temporary file outside the working directory and run that file directly (`python "<temp file>" "<md file>" --lang <en|vi>`, which works in any shell), then delete the temp file; the script needs no other file. If the `python` command is not found (common on macOS/Linux), use `python3` instead. If `openpyxl` is missing, run `python -m pip install openpyxl` (or `python3 -m pip …`) and try again.
    - `--lang en|vi` (default `en`): language of all fixed labels in the Excel file (title, metadata labels, column headers, change-log note, fallback group name). Use `vi` when the user wrote in Vietnamese (or asked for Vietnamese), `en` otherwise.
    - `--qc-name "<name>"` (optional): tester name for the "Tester" metadata cell; leave it out if the user has not given a name.
    - `--ticket-url-template "<url with {id}>"` (optional): see step 1.
