@@ -1,6 +1,6 @@
 # write-quick-test-cases
 
-Quickly writes a **basic test case set** (Positive / Negative / Boundary / Security) from a short requirement or user story and exports it to a **ready-to-use Excel test sheet** built from the bundled template.
+Quickly writes a **basic test case set** (Positive / Negative / Boundary / Security) from a short requirement or user story and exports it to a **ready-to-use Excel test sheet** with the bundled script.
 
 Vietnamese version: [README.vi.md](README.vi.md). The AI agent follows `SKILL.md`.
 
@@ -11,8 +11,6 @@ write-quick-test-cases/
   ├── SKILL.md                          ← instructions for the AI agent
   ├── README.md                         ← this file
   ├── README.vi.md                      ← Vietnamese user guide
-  ├── assets/
-  │     └── Template_TCs.xlsx           ← Excel template (layout, styles)
   └── scripts/
         └── testcase_md_to_xlsx.py      ← Markdown → Excel converter (--lang en|vi, --qc-name, --ticket-url-template)
 ```
@@ -58,7 +56,9 @@ The Excel file:
 - Test cases grouped by Module/Function as "I.", "II."…, numbered continuously, Positive first, then Negative, Boundary, Security.
 - 10 columns: No. · Test objective · Precondition · Test data · Test steps · Expected result · Actual result · Bug ID · Notes · Tester — the **last 4 are left blank** for test execution.
 - Wrapped text with row heights fitted to content; no frozen panes.
-- **Expected results that still need PO/BA confirmation** (e.g. "needs confirmation", "assumed", `QH-xx`) are **highlighted in light yellow**; the agent also lists which cases they are.
+- **Expected results that still need PO/BA confirmation** (e.g. "needs confirmation", "assumed", `QH-xx`) are **highlighted in light orange**; the agent also lists which cases they are.
+
+If you give only a feature name (no description, rules or acceptance criteria), the agent asks up to 2 questions first and creates no file until you answer.
 
 ## Language
 

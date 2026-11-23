@@ -1,6 +1,6 @@
 ---
 name: write-quick-test-cases
-description: "Quickly writes a basic test case set (Positive/Negative/Boundary/Security) from a short requirement or user story and exports it to Excel using the bundled \"TEST SCENARIOS\" template (metadata block, cases grouped by Module/Function as \"I.\"/\"II.\" groups, separate Precondition/Test data/Steps/Expected result columns, blank execution columns). Use when the user wants a lightweight, ready-to-use Excel test case sheet without deep coverage analysis, e.g. \"write test cases for this feature\", \"quick test cases for this user story\", \"viết test case nhanh\", \"viết test case cho tính năng này\", \"xuất test case ra Excel\". Do NOT use for converting an arbitrary Markdown file to Excel."
+description: "Quickly writes a basic test case set (Positive/Negative/Boundary/Security) from a short requirement or user story and exports it to an Excel \"TEST SCENARIOS\" sheet (metadata block, cases grouped by Module/Function as \"I.\"/\"II.\" groups, separate Precondition/Test data/Steps/Expected result columns, blank execution columns). Use when the user wants a lightweight, ready-to-use Excel test case sheet without deep coverage analysis, e.g. \"write test cases for this feature\", \"quick test cases for this user story\", \"viết test case nhanh\", \"viết test case cho tính năng này\", \"xuất test case ra Excel\". Do NOT use for converting an arbitrary Markdown file to Excel."
 metadata:
   author: tuyenvo224
   version: "1.1"
@@ -21,7 +21,7 @@ Take these from the user's message (a pasted description, a file, or the convers
 - **Description / User Story** — the feature description, business flow or Acceptance Criteria to cover.
 - **Ticket** (optional) — a ticket URL or ID, written in the H1 heading.
 
-If the requirement is too thin to write meaningful cases, ask at most 2 short questions; otherwise state assumptions and mark them as needing confirmation (see "ADDITIONAL RULES").
+If the requirement is too thin (e.g. only a feature name, with no description, rules or acceptance criteria), ask at most 2 short questions and stop: do not create any file until the user answers or tells you to proceed with assumptions. Otherwise state assumptions and mark them as needing confirmation (see "ADDITIONAL RULES").
 
 ---
 
@@ -45,10 +45,10 @@ When writing in Vietnamese, use the Vietnamese column names instead: `STT | Modu
 
 How to fill it in:
 - **Module/Function**: consecutive rows with the same value are merged into one Group when converted to Excel (shown as "I. <name>", "II. <name>"...) — so test cases for the same module/screen must be placed **next to each other**, not interleaved with other modules.
-- **Test objective**: always starts with a classification tag in square brackets `[Positive]`/`[Negative]`/`[Boundary]`/`[Security]` (the template has no separate Type column; this tag replaces it).
-- **Precondition** and **Test data** are 2 separate columns in the template — do not merge them into Steps.
+- **Test objective**: always starts with a classification tag in square brackets `[Positive]`/`[Negative]`/`[Boundary]`/`[Security]` (the Excel sheet has no separate Type column; this tag replaces it).
+- **Precondition** and **Test data** are 2 separate columns in the Excel sheet — do not merge them into Steps.
 
-**Follow the bundled template** at `assets/Template_TCs.xlsx` in this skill's folder (sheet `TCs`) — it is a real Excel file (not Markdown) with a metadata block at the top (Screen/Feature name, Spec link, Ticket link, Prototype, Domain, Account, Tester...) and 3 empty example Groups ("I. Group 1", "II. Group 2", "III. Group 3") to show the structure. The main table has exactly 10 columns in this order: Test case No. | Test objective | Precondition | Test data | Test steps | Expected result | Actual result | Bug ID | Notes | Tester — **the last 4 columns (Actual result/Bug ID/Notes/Tester) stay blank; they are for the tester to fill in during test execution. Do NOT pre-fill them.** (In Vietnamese output the same columns are labeled STT trường hợp kiểm thử | Mục đích kiểm thử | Precondition | Test data | Các bước thực hiện | Kết quả mong muốn | Kết quả hiện tại | Mã lỗi | Ghi chú | QC thực hiện.)
+**The Excel layout** (sheet `TCs`) is built by the bundled script: a metadata block at the top (Screen/Feature name, Spec link, Ticket link, Prototype, Domain, Account, Tester...), then the test cases grouped as "I. <module>", "II. <module>"... The main table has exactly 10 columns in this order: Test case No. | Test objective | Precondition | Test data | Test steps | Expected result | Actual result | Bug ID | Notes | Tester — **the last 4 columns (Actual result/Bug ID/Notes/Tester) stay blank; they are for the tester to fill in during test execution. Do NOT pre-fill them.** (In Vietnamese output the same columns are labeled STT trường hợp kiểm thử | Mục đích kiểm thử | Precondition | Test data | Các bước thực hiện | Kết quả mong muốn | Kết quả hiện tại | Mã lỗi | Ghi chú | QC thực hiện.)
 
 ---
 
@@ -56,7 +56,7 @@ How to fill it in:
 - **Ordering:** Within each Group (module/screen), put *Positive Cases* first, then *Negative*, *Boundary*, *Security*.
 - **Language:** follow the "Language" section above.
 - **Quality:** Clear and easy to understand so a tester can execute right away without asking follow-up questions.
-- **Flag expected results that need confirmation:** If an *Expected result* is based on an assumption or still needs to be confirmed with the PO/BA, always state it explicitly in that cell (or in the Precondition/Test data cell if that is where the assumption lives), in the form `(assumed: <what> – needs confirmation)`, adding the question ID when the user has one from `requirement-clarifier` (e.g. `(needs confirmation QH-02)`) — in Vietnamese: `(giả định: <nội dung> – cần confirm)` / `(cần confirm QH-02)`. The script relies on these keywords to highlight the cell in Excel automatically (see "Output"), so do not phrase it any other way without a keyword (e.g. "might be…", "up to DEV") — such a cell will not be highlighted.
+- **Flag expected results that need confirmation:** If an *Expected result* is based on an assumption or still needs to be confirmed with the PO/BA, always state it explicitly in that cell (or in the Precondition/Test data cell if that is where the assumption lives), in the form `(assumed: <what> – needs confirmation)`, adding the question ID when the user has one from a clarification question list (e.g. `(needs confirmation QH-02)`) — in Vietnamese: `(giả định: <nội dung> – cần confirm)` / `(cần confirm QH-02)`. The script relies on these keywords to highlight the cell in Excel automatically (see "Output"), so do not phrase it any other way without a keyword (e.g. "might be…", "up to DEV") — such a cell will not be highlighted.
 
 # Output
 
@@ -70,13 +70,13 @@ How to fill it in:
    ```
    python "<this skill's folder>/scripts/testcase_md_to_xlsx.py" "test-cases-for-review/yyyy-mm-dd_hh-mm-ss-feature-name.md" --lang en
    ```
-   If the `python` command is not found (common on macOS/Linux), use `python3` instead. If `openpyxl` is missing, run `python -m pip install openpyxl` (or `python3 -m pip …`) and try again.
+   If the skill was loaded without a folder on disk, save the script content exactly as received to a temporary file outside the working directory and run it from standard input (`python - "<md file>" --lang <en|vi> < <temp file>`), then delete the temp file; the script needs no other file. If the `python` command is not found (common on macOS/Linux), use `python3` instead. If `openpyxl` is missing, run `python -m pip install openpyxl` (or `python3 -m pip …`) and try again.
    - `--lang en|vi` (default `en`): language of all fixed labels in the Excel file (title, metadata labels, column headers, change-log note, fallback group name). Use `vi` when the user wrote in Vietnamese (or asked for Vietnamese), `en` otherwise.
    - `--qc-name "<name>"` (optional): tester name for the "Tester" metadata cell; leave it out if the user has not given a name.
    - `--ticket-url-template "<url with {id}>"` (optional): see step 1.
 
-   The script builds the file from the template: labels in the chosen language, the metadata block (feature name, ticket link, tester, creation date), Module/Function groups ("I. ...", "II. ..."), continuous numbering, wrapped text with fitted row heights, and the 4 execution columns left blank. If the Markdown has several test case tables (e.g. one per module), all of them are read in file order.
-   **Highlighting cells that need confirmation:** when any column of a test case contains a confirmation keyword, its **Expected result** cell gets a light-yellow fill. Keywords — English: `needs confirmation`, `to be confirmed`, `TBC`, `TBD`, `confirm with`, `pending confirmation`, `assumption`, `assumed`, `unclear`, `not finalized`; Vietnamese (with diacritics): `cần confirm`, `confirm lại`, `chờ confirm`, `cần xác nhận`, `chờ xác nhận`, `giả định`, `giả sử`, `tạm dùng`, `tạm hiểu`, `chưa chốt`, `chưa rõ`; question IDs `QH-xx`/`QM-xx`/`QL-xx`. The script prints which test case numbers were highlighted — use that list in your report to the user.
+   The script builds the whole file itself (no template file needed): labels in the chosen language, the metadata block (feature name, ticket link, tester, creation date), Module/Function groups ("I. ...", "II. ..."), continuous numbering, wrapped text with fitted row heights, and the 4 execution columns left blank. If the Markdown has several test case tables (e.g. one per module), all of them are read in file order.
+   **Highlighting cells that need confirmation:** when any column of a test case contains a confirmation keyword, its **Expected result** cell gets a light-orange fill. Keywords — English: `needs confirmation`, `to be confirmed`, `TBC`, `TBD`, `confirm with`, `pending confirmation`, `assumption`, `assumed`, `unclear`, `not finalized`; Vietnamese (with diacritics): `cần confirm`, `confirm lại`, `chờ confirm`, `cần xác nhận`, `chờ xác nhận`, `giả định`, `giả sử`, `tạm dùng`, `tạm hiểu`, `chưa chốt`, `chưa rõ`; question IDs `QH-xx`/`QM-xx`/`QL-xx`. The script prints which test case numbers were highlighted — use that list in your report to the user.
    If the script fails or reports a skipped table, do NOT edit the script or write a separate one: fix the Markdown (column names, table layout) and run it again; if it still fails, tell the user the error message.
 
    File naming: `yyyy-mm-dd_hh-mm-ss` is the local date and 24-hour time when the file is written; `feature-name` is a short slug of the feature or requirement name: lowercase ASCII letters and digits joined by `-`, Vietnamese diacritics removed (`đ` → `d`), no prefixes such as "Feature:" or version numbers, at most 50 characters (e.g. `apply-voucher-at-checkout`).

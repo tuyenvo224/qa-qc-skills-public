@@ -1,41 +1,20 @@
 """
-Convert the Markdown test case table produced by the write-quick-test-cases skill into the
-standard "TEST SCENARIOS" Excel file, using ../assets/Template_TCs.xlsx as the base
-(sheet "TCs") so the output keeps the exact layout: a metadata header block
-(feature name, spec/ticket links, tester info) followed by test cases grouped into
-"I. <module>", "II. <module>"... blocks.
+Convert a Markdown test case table into a "TEST SCENARIOS" Excel file (sheet "TCs"):
+a metadata block (feature name, spec/ticket links, tester) followed by test cases
+grouped into "I. <module>", "II. <module>"... blocks. The whole layout is built in
+code, so this script needs no other file (only Python 3.8+ and openpyxl).
 
-Output language (--lang en|vi, default en): every fixed label the script writes
-(title, metadata labels, column headers, change-log note, fallback group name) is
-overwritten from the LABELS map below, so a single template serves both languages.
-
-Expected Markdown table columns (order-independent, matched by keyword; English or
-Vietnamese header names are both accepted):
+Markdown columns (any order, English or Vietnamese names, matched by keyword):
     No. | Module/Function | Test objective | Precondition | Test data | Test steps | Expected result
-    STT | Module/Function | Muc dich kiem thu | Precondition | Test Data | Cac buoc thuc hien | Ket qua mong muon
+- Consecutive rows with the same Module/Function form one group.
+- The type (Positive/Negative/Boundary/Security) is a "[Type] " prefix in Test objective.
+- "No." is optional; cases are renumbered. Every matching table is read in file order.
+- Text starting with "=" is written as plain text, never as a formula.
+The execution columns (Actual result, Bug ID, Notes, Tester) are left blank.
 
-- "Module/Function" groups consecutive rows into a Group block in the output.
-- "Type" (Positive/Negative/Boundary/Security) is expected as a "[Type] " prefix
-  inside "Test objective" - the template has no dedicated Type column.
-- The "No." column is optional; test cases are renumbered continuously.
-- Every table with these columns is read, in file order (e.g. one table per module);
-  other tables are skipped with a warning.
-- Cell text starting with "=" is written as plain text, never as an Excel formula.
-
-The 4 execution-only columns in the template (Actual result, Bug ID, Notes, Tester)
-are left blank - they are filled in by the tester during test execution, not
-authored here.
-
-Ticket link: read from the first H1 heading, "# Test Case: <Feature> (<ticket>)".
-The feature name cell gets <Feature> only; the ticket goes to the "Ticket link" cell.
-  - A full URL in the heading (http/https) is used as-is (and made clickable).
-  - A bare ID such as "#123" or "PROJ-123" is written as plain text, or turned into
-    a URL when --ticket-url-template is given (e.g.
-    "https://jira.example.com/browse/{id}" or "https://redmine.example.com/issues/{id}").
-
-Table-parsing logic (clean_cell/split_row/is_separator/find_tables) is adapted from
-../../markdown-to-excel/scripts/md_to_xlsx.py - keep both in sync if the generic
-parsing rules change.
+Ticket: read from the first H1 heading, "# Test Case: <Feature> (<ticket>)". A URL is
+made clickable; a bare ID ("#123", "PROJ-123") stays plain text unless
+--ticket-url-template (e.g. "https://jira.example.com/browse/{id}") is given.
 
 Usage:
     python testcase_md_to_xlsx.py <input.md> [output.xlsx] [--lang en|vi]
@@ -46,28 +25,24 @@ import argparse
 import re
 import sys
 import unicodedata
-from copy import copy
 from datetime import date
 from pathlib import Path
 
 import openpyxl
-from openpyxl.styles import Font, PatternFill
+from openpyxl.formatting.rule import CellIsRule
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
-TEMPLATE_PATH = Path(__file__).resolve().parent.parent / 'assets' / 'Template_TCs.xlsx'
 SHEET_NAME = 'TCs'  # same in both languages ("TCs" = test cases)
 
-# Rows in the template's example content (3 sample groups, "I."/"II."/"III.") that
-# get wiped and rebuilt from the parsed Markdown data.
-EXAMPLE_FIRST_ROW = 12
-EXAMPLE_ROW_COUNT = 16  # rows 12..27 inclusive
-EXAMPLE_MERGES = ['A12:E12', 'A19:E19', 'A27:E27']
+HEADER_ROW = 10
+FIRST_DATA_ROW = 12  # row 11 is an empty spacer row under the header
 GROUP_MERGE_COLS = 5  # group header spans columns A..E
 
 DATA_COLS = 10  # A..J
 EXPECTED_COL = 6  # F - "Expected result"
 
-# Fixed texts written into the template, per output language. Keys are cell
-# coordinates in the template, plus a few non-cell entries (prefixed with "_").
+# Fixed texts per output language. Keys are cell coordinates, plus a few non-cell
+# entries (prefixed with "_").
 LABELS = {
     'en': {
         'E1': 'TEST SCENARIOS',
@@ -132,14 +107,14 @@ OPTIONAL_COLUMNS = {'stt'}
 EXACT_MATCH_MAX_LEN = 3
 
 # Cells that rest on an assumption / still need PO-BA confirmation get a
-# light-yellow fill on the expected result so the tester can spot them at a glance.
-CONFIRM_FILL = PatternFill(fill_type='solid', start_color='FFFFFF99', end_color='FFFFFF99')
+# light-orange fill on the expected result so the tester can spot them at a glance.
+CONFIRM_FILL = PatternFill(fill_type='solid', start_color='FFFFE699', end_color='FFFFE699')
 # English phrases and IDs: matched against the lowercased text.
 CONFIRM_PATTERN_EN = re.compile(
     r'\b('
     r'needs? confirm(ation)?|to be confirmed|tbc|tbd|confirm with|pending confirmation'
     r'|awaiting confirmation|assumption|assumed|assuming|not finali[sz]ed|unclear'
-    # Clarification question IDs from requirement-clarifier (QH/QM/QL-xx)
+    # Clarification question IDs (QH/QM/QL-xx = high/medium/low priority questions)
     r'|(qh|qm|ql)-\d+'
     r')\b'
 )
@@ -351,49 +326,81 @@ def extract_feature_info(md_text: str, input_path: Path, ticket_url_template=Non
     return heading, None, False
 
 
-def capture_row_style(ws, row):
-    style = {}
+# ---- Sheet layout and styles -------------------------------------------------
+FONT_NAME = 'Times New Roman'
+THIN = Side(style='thin', color='FF000000')
+BOX = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
+
+
+def solid(rgb):
+    return PatternFill(fill_type='solid', start_color=rgb, end_color=rgb)
+
+
+HEADER_FILL = solid('FF00B050')  # green column header row
+TESTER_FILL = solid('FFFFC000')  # orange "Tester" metadata block
+GROUP_FILL = solid('FFFFFF00')   # yellow "I. <module>" group rows
+COL_WIDTHS = {'A': 17.1, 'B': 42.3, 'C': 35, 'D': 35, 'E': 53.4, 'F': 60.9,
+              'G': 24.7, 'H': 20.7, 'I': 22.6, 'J': 30.4}
+ROW_HEIGHTS = {1: 24.6, 3: 67.5, 4: 26.25, 5: 35.25, 7: 30, 8: 24, HEADER_ROW: 45}
+LINK_ROWS = (3, 4, 5, 6)  # spec / ticket / prototype / domain values look like links
+META_ROWS = range(2, 9)   # metadata block: labels in E, values in F, tester in H..J
+
+
+def font(size=11, bold=False, **kw):
+    return Font(name=FONT_NAME, sz=size, bold=bold, **kw)
+
+
+def style_cell(cell, fnt=None, fill=None, border=None, horizontal=None, wrap=False):
+    cell.font = fnt or font()
+    if fill:
+        cell.fill = fill
+    if border:
+        cell.border = border
+    cell.alignment = Alignment(horizontal=horizontal, vertical='center', wrap_text=wrap)
+
+
+def build_layout(ws):
+    """Draw the fixed part of the sheet: title, metadata block, column header."""
+    ws.sheet_view.showGridLines = False
+    for letter, width in COL_WIDTHS.items():
+        ws.column_dimensions[letter].width = width
+    for row, height in ROW_HEIGHTS.items():
+        ws.row_dimensions[row].height = height
+
+    style_cell(ws['E1'], font(20, bold=True), horizontal='center', wrap=True)
+    for row in META_ROWS:
+        style_cell(ws.cell(row, 5), font(bold=True), border=BOX, wrap=True)
+        link = row in LINK_ROWS
+        style_cell(ws.cell(row, 6), font(underline='single' if link else None,
+                                         color='FF0563C1' if link else None),
+                   border=BOX, wrap=True)
+        for col in (8, 9, 10):
+            style_cell(ws.cell(row, col), font(bold=(row == 2)),
+                       fill=TESTER_FILL if row == 2 else None, border=BOX)
+
     for col in range(1, DATA_COLS + 1):
-        cell = ws.cell(row=row, column=col)
-        style[col] = dict(
-            font=copy(cell.font),
-            fill=copy(cell.fill),
-            border=copy(cell.border),
-            alignment=copy(cell.alignment),
-        )
-    return style
+        style_cell(ws.cell(HEADER_ROW, col), font(bold=True), fill=HEADER_FILL,
+                   border=BOX, horizontal='center', wrap=True)
+        ws.cell(HEADER_ROW + 1, col).border = BOX
 
 
-def plain_text_font(font):
-    """The template's sample data cell in column F once carried the built-in
-    "Hyperlink" style (Calibri, blue theme color, underline), which makes test case
-    text look like a clickable link. Force data cells to plain black,
-    non-underlined text in the template's body font."""
-    return Font(
-        name='Times New Roman',
-        sz=font.sz or 11,
-        bold=font.b,
-        italic=font.i,
-        underline=None,
-        strike=False,
-        color='FF000000',
-    )
-
-
-def normalize_data_style(style):
-    for s in style.values():
-        s['font'] = plain_text_font(s['font'])
-    return style
-
-
-def apply_row_style(ws, row, style):
+def style_group_row(ws, row):
     for col in range(1, DATA_COLS + 1):
-        cell = ws.cell(row=row, column=col)
-        s = style[col]
-        cell.font = s['font']
-        cell.fill = s['fill']
-        cell.border = s['border']
-        cell.alignment = s['alignment']
+        style_cell(ws.cell(row, col), font(bold=True), fill=GROUP_FILL, border=BOX,
+                   horizontal='left' if col == 1 else None)
+
+
+def style_data_row(ws, row):
+    for col in range(1, DATA_COLS + 1):
+        style_cell(ws.cell(row, col), font(bold=(col == 1)), border=BOX,
+                   horizontal='center' if col == 1 else 'left', wrap=True)
+
+
+def add_result_colors(ws, first_row, last_row):
+    """Actual result column: "F" (failed) in red, "PE" (pending) in blue."""
+    rng = f'G{first_row}:G{max(first_row, last_row) + 300}'
+    ws.conditional_formatting.add(rng, CellIsRule(operator='equal', formula=['"F"'], font=Font(color='FFFF0000')))
+    ws.conditional_formatting.add(rng, CellIsRule(operator='equal', formula=['"PE"'], font=Font(color='FF0000FF')))
 
 
 MAX_ROW_HEIGHT = 409  # Excel's hard limit for a row height (points)
@@ -417,9 +424,8 @@ def fit_row_to_text(ws, row):
     max_height = 15
     for col in range(1, DATA_COLS + 1):
         cell = ws.cell(row=row, column=col)
-        alignment = copy(cell.alignment)
-        alignment.wrap_text = True
-        cell.alignment = alignment
+        a = cell.alignment
+        cell.alignment = Alignment(horizontal=a.horizontal, vertical=a.vertical, wrap_text=True)
         if cell.value in (None, ''):
             continue
         letter = cell.column_letter
@@ -441,8 +447,10 @@ def build_workbook(records, feature_name, ticket, ticket_is_url, qc_name, lang):
     labels = LABELS[lang]
     groups = group_rows(records)
 
-    wb = openpyxl.load_workbook(TEMPLATE_PATH)
-    ws = wb[SHEET_NAME]
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = SHEET_NAME
+    build_layout(ws)
 
     apply_labels(ws, labels)
     ws['F2'] = feature_name
@@ -455,34 +463,16 @@ def build_workbook(records, feature_name, ticket, ticket_is_url, qc_name, lang):
     ws['I3'].number_format = 'yyyy-mm-dd'
     ws['J3'] = labels['_change_note']
 
-    for col in ('C', 'D'):
-        ws.column_dimensions[col].width = 35
-
-    group_style = capture_row_style(ws, 12)
-    data_style = normalize_data_style(capture_row_style(ws, 13))
-    data_last_style = normalize_data_style(capture_row_style(ws, 18))
-
-    for rng in EXAMPLE_MERGES:
-        try:
-            ws.unmerge_cells(rng)
-        except KeyError:
-            pass
-    ws.delete_rows(EXAMPLE_FIRST_ROW, EXAMPLE_ROW_COUNT)
-
-    total_rows_needed = sum(1 + len(items) for _, items in groups) if groups else 1
-    ws.insert_rows(EXAMPLE_FIRST_ROW, amount=total_rows_needed)
-
-    r = EXAMPLE_FIRST_ROW
+    r = FIRST_DATA_ROW
     stt = 1
     highlighted = []
     for gi, (module_name, items) in enumerate(groups, start=1):
-        apply_row_style(ws, r, group_style)
+        style_group_row(ws, r)
         ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=GROUP_MERGE_COLS)
         set_text(ws.cell(row=r, column=1), f'{to_roman(gi)}. {module_name or labels["_other_group"]}')
         r += 1
-        for i, row in enumerate(items):
-            is_last = i == len(items) - 1
-            apply_row_style(ws, r, data_last_style if is_last else data_style)
+        for row in items:
+            style_data_row(ws, r)
             purpose = row['purpose']
             precondition = row['precondition']
             test_data = row['test_data']
@@ -501,9 +491,7 @@ def build_workbook(records, feature_name, ticket, ticket_is_url, qc_name, lang):
             stt += 1
             r += 1
 
-    # Output must not freeze any row/column - clear panes on every sheet.
-    for sheet in wb.worksheets:
-        sheet.freeze_panes = None
+    add_result_colors(ws, FIRST_DATA_ROW, r - 1)
     return wb, highlighted
 
 
@@ -523,9 +511,6 @@ def main():
     input_path = Path(args.input)
     if not input_path.exists():
         print(f'Input file not found: {input_path}', file=sys.stderr)
-        sys.exit(1)
-    if not TEMPLATE_PATH.exists():
-        print(f'Template file not found: {TEMPLATE_PATH}', file=sys.stderr)
         sys.exit(1)
     if args.ticket_url_template and '{id}' not in args.ticket_url_template:
         print('--ticket-url-template must contain the "{id}" placeholder.', file=sys.stderr)

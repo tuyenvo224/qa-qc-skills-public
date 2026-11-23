@@ -1,6 +1,6 @@
 # write-quick-test-cases
 
-Viết nhanh **bộ test case cơ bản** (Positive / Negative / Boundary / Security) từ requirement hoặc user story ngắn, rồi xuất ra **file Excel kịch bản kiểm thử dùng được ngay** dựa trên template có sẵn.
+Viết nhanh **bộ test case cơ bản** (Positive / Negative / Boundary / Security) từ requirement hoặc user story ngắn, rồi xuất ra **file Excel kịch bản kiểm thử dùng được ngay** bằng script đi kèm.
 
 Bản tiếng Anh: [README.md](README.md). AI agent làm theo `SKILL.md`.
 
@@ -11,8 +11,6 @@ write-quick-test-cases/
   ├── SKILL.md                          ← hướng dẫn cho AI agent
   ├── README.md                         ← hướng dẫn tiếng Anh
   ├── README.vi.md                      ← file này
-  ├── assets/
-  │     └── Template_TCs.xlsx           ← template Excel (layout, định dạng)
   └── scripts/
         └── testcase_md_to_xlsx.py      ← chuyển Markdown → Excel (--lang en|vi, --qc-name, --ticket-url-template)
 ```
@@ -58,7 +56,9 @@ File Excel:
 - Test case nhóm theo Module/Function thành "I.", "II."…, đánh số liên tục; Positive trước, rồi Negative, Boundary, Security.
 - 10 cột: STT · Mục đích kiểm thử · Precondition · Test data · Các bước thực hiện · Kết quả mong muốn · Kết quả hiện tại · Mã lỗi · Ghi chú · QC thực hiện. **4 cột cuối để trống** cho lúc chạy test.
 - Tự xuống dòng, chiều cao hàng vừa nội dung; không cố định hàng/cột.
-- **Kết quả mong muốn còn chờ PO/BA xác nhận** (vd "cần confirm", "giả định", `QH-xx`) được **tô vàng nhạt**; AI agent cũng liệt kê đó là những case nào.
+- **Kết quả mong muốn còn chờ PO/BA xác nhận** (vd "cần confirm", "giả định", `QH-xx`) được **tô cam nhạt**; AI agent cũng liệt kê đó là những case nào.
+
+Nếu bạn chỉ đưa tên chức năng (không có mô tả, rule hay acceptance criteria), agent hỏi tối đa 2 câu trước và chưa tạo file cho tới khi bạn trả lời.
 
 ## Ngôn ngữ
 
