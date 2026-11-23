@@ -11,7 +11,7 @@ metadata:
 **Input:** the user's description of a failure. Optionally a spec, screenshots, test environment details.
 **Output:** a bug title + body following the template, for the user to **copy and paste** into their tracker.
 
-Run straight to the result: do **not** present a plan and do **not** wait for confirmation. Stop only if a spec the user points to cannot be read.
+Run straight to the result: do **not** present a plan and do **not** wait for confirmation. Stop only if a spec the user points to cannot be read, or if the description is too thin (Step 1).
 This skill never creates or edits issues in any tracker — the user reviews the report and posts it.
 
 ## Language
@@ -31,6 +31,8 @@ From the user's description and the conversation (spec, earlier analysis), ident
 - **Environment**: URL/build, OS, browser/device, test account, and the environment name (STG, UAT, PROD…).
 - **Screenshots**: file names or "attachment #n", recorded in Notes so the user remembers to attach them.
 
+**Too thin:** if the description does not say what was done and what was observed (e.g. only "checkout is broken"), do not write the report: ask at most 3 short questions (what you did, what you saw, which environment) and stop.
+
 Several **independent** failures → several bugs, one pair of codeblocks each. Cases with the same cause that differ in one condition (e.g. ticked / not ticked) → one bug: the failing case is the main one, the passing case goes into Notes.
 
 ## Step 2 · Find the basis in the spec
@@ -40,7 +42,7 @@ Several **independent** failures → several bugs, one pair of codeblocks each. 
 - Find every rule about the expected behavior; quote the **exact ID** (BR-xxx, FR-xx, UC-xx, AC-xx, §section) with a short summary that keeps the meaning.
 - State why the actual result breaks the rule, e.g. "no rule requires condition X".
 - **No spec**: write Expected from the user's description and add to Notes: "Expected based on the tester's description, not yet checked against a spec".
-- Spec **silent or ambiguous** about this behavior: do not conclude it is a bug. Write in Notes "Spec does not define this clearly — needs BA/PO confirmation", and raise it in the final check.
+- Spec given but **silent or ambiguous** about this behavior: do not write a bug for it. Add it to "Check before posting" as a question for the BA/PO (e.g. "Spec does not define a confirmation before cancelling — confirm with BA/PO whether this is a bug").
 
 ## Step 3 · Write the bug
 
@@ -48,7 +50,7 @@ Follow **[references/template.md](references/template.md)** exactly: 7 sections 
 
 **Title**
 - Format: `[<ENV>][<UI|Function>][<Product>] [<Module>] <condition> → <wrong behavior>` (in Vietnamese the connector may be "thì" instead of `→`).
-  - `<ENV>` is the environment the user names (`[STG]`, `[UAT]`, `[PROD]`, `[DEV]`…). If the user does not name one, write `[<ENV>]` and list it in the final check.
+  - `<ENV>` is the environment the user names (`[STG]`, `[UAT]`, `[PROD]`, `[DEV]`…). If the user does not name one, write `[<ENV>]` and list it in the final check. The same applies to `[<Product>]` and `[<Module>]` when they are not known.
   - Right after the environment tag comes **exactly one** bug-type tag: `[UI]` or `[Function]`, no space between tags.
 - One line that tells what is wrong without opening the bug. Never generic ("Remember bug").
 - Examples:

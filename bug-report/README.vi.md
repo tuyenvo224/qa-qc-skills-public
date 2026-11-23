@@ -52,7 +52,7 @@ Trả về ngay trong khung chat (không tạo file):
 2. **Nội dung** (codeblock 2): I. Môi trường · II. Điều kiện tiên quyết · III. Các bước tái hiện · IV. Kết quả thực tế · V. Kết quả mong đợi · VI. Tần suất · VII. Ghi chú (có dòng **Ảnh đính kèm** bắt buộc).
 3. **Kiểm tra trước khi post:** tối đa 5 dòng, gồm ảnh cần đính kèm, các ô `<...>` còn trống, giả định cần kiểm lại, câu hỏi cho BA/PO.
 
-Quy tắc skill tuân theo: Kết quả thực tế chỉ ghi điều bạn đã quan sát; thông tin thiếu để `<...>`, không tự bịa; rule ID (BR/FR/UC/AC) trích đúng nguyên văn; spec không quy định hoặc mơ hồ thì ghi rõ, không tự kết luận là bug. Mặc định là Markdown, có thể đổi sang Jira wiki markup nếu bạn yêu cầu.
+Quy tắc skill tuân theo: Kết quả thực tế chỉ ghi điều bạn đã quan sát; thông tin thiếu để `<...>`, không tự bịa; rule ID (BR/FR/UC/AC) trích đúng nguyên văn; spec không quy định hoặc mơ hồ về một hành vi thì nêu thành câu hỏi cho BA/PO, không viết thành bug. Nếu mô tả chưa nói bạn đã làm gì và thấy gì, skill hỏi tối đa 3 câu ngắn trước. Mặc định là Markdown, có thể đổi sang Jira wiki markup nếu bạn yêu cầu.
 
 ## Ngôn ngữ
 

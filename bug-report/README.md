@@ -52,7 +52,7 @@ Returned in the chat (no file):
 2. **Body** (codeblock 2): I. Environment · II. Preconditions · III. Steps to Reproduce · IV. Actual Result · V. Expected Result · VI. Reproducibility · VII. Notes (incl. a mandatory **Attachments** line).
 3. **Check before posting** — up to 5 lines: attachments to add, empty `<...>` fields, assumptions to verify, questions for the BA/PO.
 
-Rules the skill follows: Actual Result contains only what you observed; missing details stay as `<...>` (never invented); rule IDs (BR/FR/UC/AC) are quoted exactly; if the spec is silent or ambiguous, it says so instead of calling it a bug. Format is Markdown by default, or Jira wiki markup on request.
+Rules the skill follows: Actual Result contains only what you observed; missing details stay as `<...>` (never invented); rule IDs (BR/FR/UC/AC) are quoted exactly; if the spec is silent or ambiguous about a behavior, it raises a question for the BA/PO instead of writing a bug. If the description does not say what you did and what you saw, it asks up to 3 short questions first. Format is Markdown by default, or Jira wiki markup on request.
 
 ## Language
 
