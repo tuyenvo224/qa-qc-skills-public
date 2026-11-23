@@ -53,8 +53,10 @@ A Markdown file `mindmap/yyyy-mm-dd_hh-mm-ss-feature-name.md`. Open it with [mar
 
 - Exactly 4 levels (root → feature → scenario group → test case), so it stays readable.
 - Test data and boundary values in `inline code`.
-- Cases the requirement does not state are marked `❓(assumed)` (`❓(giả định)` in Vietnamese).
+- Cases the requirement does not state are marked `❓(assumed)` (`❓(giả định)` in Vietnamese), still with a concrete expected result for you to confirm.
+- Security / Performance / Compatibility appear only when the requirement states or clearly implies them.
 - The output is only the mindmap — no introduction or explanation.
+- If the requirement is too thin (e.g. only a feature name), the agent asks up to 2 questions first and creates no file until you answer.
 
 ## Language
 

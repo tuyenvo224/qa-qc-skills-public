@@ -53,8 +53,10 @@ Một file Markdown `mindmap/yyyy-mm-dd_hh-mm-ss-ten-feature.md`. Mở bằng [m
 
 - Đúng 4 cấp (gốc → feature → nhóm scenario → test case), để mindmap dễ đọc.
 - Dữ liệu test và giá trị biên để trong `inline code`.
-- Case requirement không nói tới được đánh dấu `❓(giả định)` (`❓(assumed)` khi viết tiếng Anh).
+- Case requirement không nói tới được đánh dấu `❓(giả định)` (`❓(assumed)` khi viết tiếng Anh), vẫn có kết quả mong đợi cụ thể để bạn xác nhận.
+- Security / Performance / Compatibility chỉ có khi requirement nêu hoặc ngụ ý rõ.
 - Output chỉ có mindmap, không có phần mở đầu hay giải thích.
+- Nếu requirement quá sơ sài (vd chỉ có tên chức năng), agent hỏi tối đa 2 câu trước và chưa tạo file cho tới khi bạn trả lời.
 
 ## Ngôn ngữ
 
