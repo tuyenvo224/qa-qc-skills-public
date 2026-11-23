@@ -3,7 +3,7 @@ name: write-quick-test-cases
 description: "Quickly writes a basic test case set (Positive/Negative/Boundary/Security) from a short requirement or user story and exports it to an Excel \"TEST SCENARIOS\" sheet (metadata block, cases grouped by Module/Function as \"I.\"/\"II.\" groups, separate Precondition/Test data/Steps/Expected result columns, blank execution columns). Use when the user wants a lightweight, ready-to-use Excel test case sheet without deep coverage analysis, e.g. \"write test cases for this feature\", \"quick test cases for this user story\", \"viết test case nhanh\", \"viết test case cho tính năng này\", \"xuất test case ra Excel\". Do NOT use for converting an arbitrary Markdown file to Excel."
 metadata:
   author: tuyenvo224
-  version: "1.1"
+  version: "1.2"
 ---
 
 ## Language
