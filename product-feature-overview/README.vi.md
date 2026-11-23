@@ -45,6 +45,8 @@ Give me a product overview and a feature map
 
 - **Tổng quan sản phẩm:** mục đích, bài toán giải quyết, đối tượng người dùng (persona và quyền của họ).
 - **Bản đồ phân cấp tính năng:** `- [ ] **Epic**` → `- [ ] *Feature*`, mỗi mục có một dòng mô tả vai trò.
+- Chỉ ghi những gì tài liệu nêu hoặc ngụ ý rõ; mục suy ra được đánh dấu "(giả định — tài liệu không nêu)".
+- Nếu bạn chỉ đưa tên sản phẩm hoặc một hai dòng, agent hỏi xin tài liệu tổng quan/PRD trước và chưa tạo file cho tới khi bạn gửi.
 
 ## Ngôn ngữ
 

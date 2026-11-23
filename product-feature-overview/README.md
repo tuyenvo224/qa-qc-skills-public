@@ -45,6 +45,8 @@ Tóm tắt tổng quan sản phẩm và vẽ bản đồ tính năng
 
 - **Product overview:** product purpose, problem solved, target users (personas and their permissions).
 - **Feature hierarchy map:** `- [ ] **Epic**` → `- [ ] *Feature*`, each with a one-line description of its role.
+- Only what the document states or clearly implies; implied items are marked "(assumption — not stated in the document)".
+- If you give only a product name or a line or two, the agent asks for the overview/PRD first and creates no file until you provide it.
 
 ## Language
 
